@@ -1,0 +1,30 @@
+.registration-form {
+    display: flex;
+    width: 360px;
+    padding: 30px;
+    margin: 40px auto;
+    background: #f1f1f1;
+    border-radius: 10px;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.5);
+    border: 1px solid #c2c2c2;
+}
+
+.registration-form h1 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 33px;
+    font-weight: bold;
+    margin: 5px;
+    color: #3e4f3f;
+}
+
+.registration-form a {
+    text-decoration: none;
+    color: #3e4f3f;
+    background: #f1f1f1;
+    border-radius: 10px;
+    border: 1px solid #c2c2c2;
+    padding: 10px;
+    margin: 10px auto;
+}
