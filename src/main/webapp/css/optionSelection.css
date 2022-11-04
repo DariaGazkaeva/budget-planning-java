@@ -1,9 +1,10 @@
 .option-selection {
     display: flex;
+    flex-wrap: wrap;
     width: 20vw;
     padding: 30px;
     margin: 40vh auto;
-    background: #f1f1f1;
+    background-color: #f1f1f1;
     border-radius: 10px;
     box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.5);
     border: 1px solid #c2c2c2;
@@ -13,9 +14,9 @@
     text-decoration: none;
     color: #3e4f3f;
     font-weight: bold;
-    background: #f1f1f1;
+    background-color: #f1f1f1;
     border-radius: 10px;
     border: 1px solid #c2c2c2;
     padding: 10px;
-    margin: 1px auto;
+    margin: 5px auto;
 }
