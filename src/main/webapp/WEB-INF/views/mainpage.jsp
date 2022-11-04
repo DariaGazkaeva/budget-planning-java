@@ -9,11 +9,13 @@
 <html>
 <head>
     <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/optionSelection.css">
 </head>
 <body>
-    <h1>Главная страница</h1>
-    <a href="${pageContext.request.contextPath}/register">Зарегистрироваться</a>
-    <a href="${pageContext.request.contextPath}/entry">Войти</a>
-
+    <div class="option-selection">
+        <a href="${pageContext.request.contextPath}/register">Зарегистрироваться</a>
+        <a href="${pageContext.request.contextPath}/entry">Войти</a>
+    </div>
 </body>
 </html>

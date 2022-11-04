@@ -1,25 +1,25 @@
-.registration-form {
+.user-form {
     display: flex;
+    align-items: center;
     width: 360px;
     padding: 30px;
     margin: 40px auto;
     background: #f1f1f1;
     border-radius: 10px;
     flex-direction: column;
-    align-items: center;
     box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.5);
     border: 1px solid #c2c2c2;
 }
 
-.registration-form h1 {
+.user-form h1 {
     font-family: "Times New Roman", Times, serif;
     font-size: 33px;
     font-weight: bold;
-    margin: 5px;
+    margin: 25px;
     color: #3e4f3f;
 }
 
-.registration-form a {
+.user-form a {
     text-decoration: none;
     color: #3e4f3f;
     background: #f1f1f1;
@@ -27,4 +27,15 @@
     border: 1px solid #c2c2c2;
     padding: 10px;
     margin: 10px auto;
+}
+
+.user-form input {
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 10px;
+    color: #212529;
+    background-color: #fff;
+    border-color: #bdbdbd;
+    border-radius: 5px;
 }

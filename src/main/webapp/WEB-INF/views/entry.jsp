@@ -9,9 +9,19 @@
 <html>
 <head>
     <title>Вход</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/userForm.css">
 </head>
 <body>
-    <h1>Страница аутентификации</h1>
-    <a href="${pageContext.request.contextPath}/">Назад</a>
+    <div class="user-form">
+        <h1>Войти</h1>
+        <form action="" method="POST">
+            <input type="text" placeholder="Введите email" name="email" required><br>
+            <br>
+            <input type="text" placeholder="Введите пароль" name="password" required><br>
+        </form>
+        <a href="${pageContext.request.contextPath}/">Назад</a>
+    </div>
+
 </body>
 </html>

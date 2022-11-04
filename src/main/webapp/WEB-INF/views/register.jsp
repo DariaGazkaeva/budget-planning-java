@@ -13,19 +13,18 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/userForm.css">
 </head>
 <body>
-    <div class="registration-form">
+    <div class="user-form">
         <h1>Регистрация</h1>
-        <a href="${pageContext.request.contextPath}/">Назад</a>
         <form action="" method="POST">
-            <h2>Как к Вам обращаться?</h2><br>
-            <input type="text" placeholder="NAME" name="name" required><br>
-            <h2>Введите email:</h2><br>
-            <input type="text" placeholder="EMAIL" name="email" required><br>
-            <h2>Придумайте пароль:</h2><br>
-            <input type="text" placeholder="PASSWORD" name="password" required><br>
-            <h2>Повторите пароль:</h2><br>
-            <input type="text" placeholder="PASSWORD" name="password" required><br>
+            <input type="text" placeholder="Как к Вам обращаться?" name="name" required><br>
+            <br>
+            <input type="text" placeholder="Введите email" name="email" required><br>
+            <br>
+            <input type="text" placeholder="Придумайте пароль" name="password" required><br>
+            <br>
+            <input type="text" placeholder="Повторите пароль" name="password" required><br>
         </form>
+        <a href="${pageContext.request.contextPath}/">Назад</a>
     </div>
 
 </body>
