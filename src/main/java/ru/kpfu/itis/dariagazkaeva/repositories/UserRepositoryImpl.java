@@ -3,6 +3,7 @@ package ru.kpfu.itis.dariagazkaeva.repositories;
 import ru.kpfu.itis.dariagazkaeva.models.User;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,7 +40,6 @@ public class UserRepositoryImpl implements UserRepository {
                 user.setId(result.getLong("id"));
                 return true;
             }
-
             return false;
 
         } catch (SQLException e) {
@@ -63,5 +63,28 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void delete(Long id) {
 
+    }
+
+    public boolean findByEmail(User user) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection
+                     .prepareStatement("SELECT * FROM public.user WHERE email = ? AND password = ?")) {
+
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getPassword());
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                user.setId(result.getLong("id"));
+                user.setName(result.getString("name"));
+                return true;
+            }
+            return false;
+
+        } catch (SQLException e) {
+            // TODO сделать свое бд исключение (Ференец делал)
+            return false;
+        }
     }
 }
