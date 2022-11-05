@@ -18,10 +18,16 @@ public class DbDataSource implements DataSource {
     private final String username;
     private final String password;
 
-    public DbDataSource(String url, String username, String password) {
+    public DbDataSource(String url, String username, String password, String driver) {
         this.url = url;
         this.username = username;
         this.password = password;
+
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         openConnection();
     }

@@ -1,6 +1,7 @@
 package ru.kpfu.itis.dariagazkaeva.listeners;
 
 import ru.kpfu.itis.dariagazkaeva.jdbc.DbDataSource;
+import ru.kpfu.itis.dariagazkaeva.repositories.UserRepositoryImpl;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -27,7 +28,8 @@ public class InitListener implements ServletContextListener {
         DataSource dataSource = new DbDataSource(
                 properties.getProperty("url"),
                 properties.getProperty("username"),
-                properties.getProperty("password"));
-        context.setAttribute("dataSource", dataSource);
+                properties.getProperty("password"),
+                properties.getProperty("driver"));
+        context.setAttribute("userRepository", new UserRepositoryImpl(dataSource));
     }
 }
