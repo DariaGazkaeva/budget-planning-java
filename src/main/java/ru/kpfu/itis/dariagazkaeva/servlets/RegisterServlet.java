@@ -16,7 +16,7 @@ import java.util.List;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
-    // TODO сделать хэширование пароля
+    // TODO проверка на второй ввод пароля и другие проверки
 
     private UserRepository userRepository;
 
@@ -28,9 +28,7 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         getServletContext().getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req, resp);
-
     }
 
     @Override
@@ -39,15 +37,18 @@ public class RegisterServlet extends HttpServlet {
         String password = req.getParameter("password");
         String name = req.getParameter("name");
 
+        req.setAttribute("name", name);
+        req.setAttribute("email", email);
+
         List<String> errors = validateRegisterFields(email, password, name);
 
         if (errors.isEmpty()) {
             User user = new User(email, password, name);
             if (userRepository.save(user)) {
 
-                req.getSession().setAttribute("user", user);
+                req.getSession().setAttribute("id", user.getId());
 
-                resp.sendRedirect(getServletContext().getContextPath());
+                resp.sendRedirect(getServletContext().getContextPath() + "/profile");
                 return;
             }
             errors.add("Пользователь с таким EMAIL уже существует");
