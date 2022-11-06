@@ -1,0 +1,17 @@
+.header {
+    display: flex;
+}
+
+.header .logo {
+    width: 15vw;
+    height: 15vw;
+}
+
+h1 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 5vw;
+    font-weight: bold;
+    color: #222623;
+    margin: 4vw auto;
+    text-shadow: 1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000;
+}
