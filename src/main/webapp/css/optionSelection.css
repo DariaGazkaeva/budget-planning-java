@@ -20,3 +20,8 @@
     padding: 10px;
     margin: 5px auto;
 }
+
+.option-selection a:hover {
+    background-color: #bdbdbd;
+    transition: .2s;
+}

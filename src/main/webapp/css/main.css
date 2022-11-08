@@ -53,8 +53,3 @@ body {
     background: url("../img/main-background.jpg") no-repeat center top / cover;
     font-family: Arial, sans-serif;
 }
-
-a:hover {
-    background-color: #bdbdbd;
-    transition: .2s;
-}
