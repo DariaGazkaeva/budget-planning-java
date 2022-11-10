@@ -1,17 +1,12 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: dgazk
-  Date: 04.11.2022
-  Time: 12:55
-  To change this template use File | Settings | File Templates.
---%>
+<%--TODO хорошо бы сделать mainLayout--%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<html lang="ru">
 <head>
-    <title>Главная страница</title>
+    <title>Дневник расходов и доходов</title>
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/optionSelection.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
-    <script src="${pageContext.request.contextPath}/js/linkListener.js"></script>
 </head>
 
 <body>

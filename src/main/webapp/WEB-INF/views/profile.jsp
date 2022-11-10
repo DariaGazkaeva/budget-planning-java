@@ -7,7 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<html lang="ru">
 <head>
     <title>Профиль</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
@@ -24,31 +25,36 @@
 
         <div class="sidebar">
             <p class="greetings">Добрый день, ${name}!</p>
-            <c:forEach items="${cashSavings}" var="cash">
-                <div class="cash-saving">
-                    <h3>${cash.getName()}</h3>
-                    <p>${cash.getSum()}</p>
+
+            <c:if test="${not empty cashSavings}">
+                <div class="cash-savings">
+                    <h2>Сбережения</h2>
+                    <br>
+                    <c:forEach items="${cashSavings}" var="cash">
+                        <div class="cash-saving">
+                            <h3>${cash.getName()}</h3>
+                            <p>
+                                <fmt:formatNumber value="${cash.getSum()}" pattern="#,##0.00" />
+                            </p>
+                            <a href="${pageContext.request.contextPath}/edit-cash-saving?id=${cash.getId()}">Редактировать</a>
+                        </div>
+                    </c:forEach>
                 </div>
-            </c:forEach>
+            </c:if>
 <%--TODO конвертер валют--%>
         </div>
 
         <div class="main">
 
             <div class="month-data">
-                <div class="option-selection">
-                    <a>Мои расходы за месяц: ${outcomeSumMonth}</a>
-                </div>
-
-                <div class="option-selection">
-                    <a>Мои доходы за месяц: ${incomeSumMonth}</a>
-                </div>
+                <a class="main-widget" href="${pageContext.request.contextPath}/history?type=outcome">Мои расходы с начала месяца: ${outcomeSumMonth}</a>
+                <a class="main-widget" href="${pageContext.request.contextPath}/history?type=income">Мои доходы с начала месяца: ${incomeSumMonth}</a>
             </div>
 
             <div class="control-buttons">
-                <button class="add-cash-saving">Добавить сбережение</button>
-                <button class="add-income">Добавить доход</button>
-                <button class="add-outcome">Добавить расход</button>
+                <a class="control-button" href="${pageContext.request.contextPath}/add-money-operation?type=income">Добавить доход</a>
+                <a class="control-button" href="${pageContext.request.contextPath}/add-money-operation?type=outcome">Добавить расход</a>
+                <a class="control-button" href="${pageContext.request.contextPath}/add-cash-saving">Добавить сбережение</a>
             </div>
 
         </div>
