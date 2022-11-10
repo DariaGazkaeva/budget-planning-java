@@ -4,18 +4,57 @@ import java.util.Date;
 
 public class MoneyOperation {
 
-    private Long id; //TODO а почему тут лонг с большой?..
+    private Long id;
     private Long authorId;
     private Float sum;
-    private Date date;
+    private String date;
     private Long categoryId;
 
-    public MoneyOperation(Long id, Long authorId, Float sum, Date date, Long categoryId) {
+    private Boolean income;
+
+    private String description;
+
+    public MoneyOperation(Long id, Long authorId, Float sum, String date, Long categoryId, Boolean income, String description) {
         this.id = id;
         this.authorId = authorId;
         this.sum = sum;
         this.date = date;
         this.categoryId = categoryId;
+        this.income = income;
+        this.description = description;
+    }
+
+    public MoneyOperation(Long authorId, Float sum, String date, Long categoryId, Boolean income, String description) {
+        this.authorId = authorId;
+        this.sum = sum;
+        this.date = date;
+        this.categoryId = categoryId;
+        this.income = income;
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public MoneyOperation(Long authorId, Float sum, String date, Long categoryId, Boolean income) {
+        this.authorId = authorId;
+        this.sum = sum;
+        this.date = date;
+        this.categoryId = categoryId;
+        this.income = income;
+    }
+
+    public Boolean getIncome() {
+        return income;
+    }
+
+    public void setIncome(Boolean income) {
+        this.income = income;
     }
 
     public Long getId() {
@@ -42,11 +81,11 @@ public class MoneyOperation {
         this.sum = sum;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
