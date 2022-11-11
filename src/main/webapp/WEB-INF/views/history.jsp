@@ -5,8 +5,20 @@
     <title>Записи</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/tables.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/userForm.css">
 </head>
 <body>
+    <div class="user-form">
+        <p>Посмотреть за другой период:</p>
+        <form action="" method="POST">
+            <input type="date" name="start">
+            <input type="date" name="end">
+            <input type="submit" value="Посмотреть">
+        </form>
+    </div>
+
+
     <table class="money-operation">
         <tr>
             <th>Категория</th>
@@ -36,5 +48,7 @@
             </tr>
         </c:forEach>
     </table>
+
+    <a class="user-form user-form__a" href="${pageContext.request.contextPath}/profile">В профиль</a>
 </body>
 </html>

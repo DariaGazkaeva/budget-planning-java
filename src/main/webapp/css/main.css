@@ -53,3 +53,7 @@ body {
     background: url("../img/main-background.jpg") no-repeat center top / cover;
     font-family: Arial, sans-serif;
 }
+
+.display-none {
+    display: none;
+}

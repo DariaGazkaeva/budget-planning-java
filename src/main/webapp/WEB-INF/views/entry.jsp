@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<html>
+<html lang="ru">
 <head>
     <title>Вход</title>
     <meta charset="UTF-8">
@@ -21,7 +21,7 @@
             <input type="submit" value="Войти">
             <br>
         </form>
-        <a href="${pageContext.request.contextPath}/">Назад</a>
+        <a class="user-form__a" href="${pageContext.request.contextPath}/">Назад</a>
     </div>
 
     <c:if test="${not empty errors}">
