@@ -1,6 +1,7 @@
 package ru.kpfu.itis.dariagazkaeva.models;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class MoneyOperation {
 
@@ -95,6 +96,32 @@ public class MoneyOperation {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MoneyOperation that = (MoneyOperation) o;
+        return authorId.equals(that.authorId) && sum.equals(that.sum) && date.equals(that.date) && Objects.equals(categoryId, that.categoryId) && income.equals(that.income) && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(authorId, sum, date, categoryId, income, description);
+    }
+
+    @Override
+    public String toString() {
+        return "MoneyOperation{" +
+                "id=" + id +
+                ", authorId=" + authorId +
+                ", sum=" + sum +
+                ", date='" + date + '\'' +
+                ", categoryId=" + categoryId +
+                ", income=" + income +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
 
