@@ -1,6 +1,9 @@
 package ru.kpfu.itis.dariagazkaeva.listeners;
 
 import ru.kpfu.itis.dariagazkaeva.jdbc.DbDataSource;
+import ru.kpfu.itis.dariagazkaeva.repositories.CashSavingRepositoryImpl;
+import ru.kpfu.itis.dariagazkaeva.repositories.CategoryRepositoryImpl;
+import ru.kpfu.itis.dariagazkaeva.repositories.MoneyOperationRepositoryImpl;
 import ru.kpfu.itis.dariagazkaeva.repositories.UserRepositoryImpl;
 
 import javax.servlet.ServletContext;
@@ -24,12 +27,17 @@ public class InitListener implements ServletContextListener {
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
+
         properties.getProperty("");
         DataSource dataSource = new DbDataSource(
                 properties.getProperty("url"),
                 properties.getProperty("username"),
                 properties.getProperty("password"),
                 properties.getProperty("driver"));
+
         context.setAttribute("userRepository", new UserRepositoryImpl(dataSource));
+        context.setAttribute("cashSavingRepository", new CashSavingRepositoryImpl(dataSource));
+        context.setAttribute("moneyOperationRepository", new MoneyOperationRepositoryImpl(dataSource));
+        context.setAttribute("categoryRepository", new CategoryRepositoryImpl(dataSource));
     }
 }
