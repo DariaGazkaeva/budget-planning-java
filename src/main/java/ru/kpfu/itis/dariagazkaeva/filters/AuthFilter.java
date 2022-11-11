@@ -8,9 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter("/profile")
+@WebFilter({"/profile", "/add-category", "/add-cash-saving", "/add-money-operation", "/delete-category", "/delete-money-operation", "/edit-cash-saving", "/edit-money-operation", "/history"})
 public class AuthFilter extends HttpFilter {
-
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         if (req.getSession().getAttribute("id") != null) {
