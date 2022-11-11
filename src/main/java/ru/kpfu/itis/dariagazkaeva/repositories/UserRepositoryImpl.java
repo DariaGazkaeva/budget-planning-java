@@ -1,6 +1,8 @@
 package ru.kpfu.itis.dariagazkaeva.repositories;
 
+import ru.kpfu.itis.dariagazkaeva.exceptions.DbException;
 import ru.kpfu.itis.dariagazkaeva.models.User;
+import ru.kpfu.itis.dariagazkaeva.utils.HashingPassword;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -8,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 public class UserRepositoryImpl implements UserRepository {
 
@@ -20,13 +21,11 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     @Override
-    public List<User> findAll() {
-        return null;
-    }
-
-    @Override
     public boolean save(User user) {
-        try(PreparedStatement statement = dataSource.getConnection()
+
+        user.setPassword(new HashingPassword().hash(user.getPassword()));
+
+        try (PreparedStatement statement = dataSource.getConnection()
                 .prepareStatement("INSERT INTO public.user(email, password, name) VALUES (?, ?, ?) RETURNING id")
         )
         {
@@ -34,13 +33,14 @@ public class UserRepositoryImpl implements UserRepository {
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getName());
 
-            ResultSet result = statement.executeQuery();
+            try (ResultSet result = statement.executeQuery()) {
 
-            if (result.next()) {
-                user.setId(result.getLong("id"));
-                return true;
+                if (result.next()) {
+                    user.setId(result.getLong("id"));
+                    return true;
+                }
+                return false;
             }
-            return false;
 
         } catch (SQLException e) {
             //TODO проверить, что это исключение о нарушении уникальности, а не что-то другое, иначе выбросить исключение
@@ -51,21 +51,32 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return Optional.empty();
-    }
+    public User findById(Long id) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM public.user WHERE id = ?")) {
 
-    @Override
-    public void update(User user) {
+            statement.setLong(1, id);
 
-    }
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return new User(result.getLong("id"),
+                            result.getString("email"),
+                            result.getString("password"),
+                            result.getString("name"));
+                } else {
+                    return null;
+                }
+            }
 
-    @Override
-    public void delete(Long id) {
-
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     public boolean findByEmail(User user) {
+
+        user.setPassword(new HashingPassword().hash(user.getPassword()));
+
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection
                      .prepareStatement("SELECT * FROM public.user WHERE email = ? AND password = ?")) {
@@ -83,8 +94,7 @@ public class UserRepositoryImpl implements UserRepository {
             return false;
 
         } catch (SQLException e) {
-            // TODO сделать свое бд исключение (Ференец делал)
-            return false;
+            throw new DbException(e);
         }
     }
 }

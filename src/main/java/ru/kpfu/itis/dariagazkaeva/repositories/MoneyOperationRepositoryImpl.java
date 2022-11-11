@@ -1,8 +1,6 @@
 package ru.kpfu.itis.dariagazkaeva.repositories;
 
-import ru.kpfu.itis.dariagazkaeva.models.CashSaving;
 import ru.kpfu.itis.dariagazkaeva.models.MoneyOperation;
-import ru.kpfu.itis.dariagazkaeva.models.User;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -10,9 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
 
@@ -74,11 +70,6 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
     }
 
     @Override
-    public MoneyOperation[] findAllByAuthorId(Long id) {
-        return new MoneyOperation[0];
-    }
-
-    @Override
     public List<MoneyOperation> findAllByAuthorId(Long authorId, String start, String end, Boolean income) {
 
         List<MoneyOperation> moneyOperations = new ArrayList<>();
@@ -110,10 +101,6 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
         }
     }
 
-    @Override
-    public MoneyOperation[] findAllByAuthorId(Long id, Boolean income) {
-        return new MoneyOperation[0];
-    }
 
     @Override
     public Float getSum(Long authorId, String startDay, String endDay, Boolean income) {
@@ -138,12 +125,35 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
     }
 
     @Override
-    public void update(Long id) {
+    public boolean update(MoneyOperation moneyOperation) {
+        try (PreparedStatement statement = dataSource.getConnection().prepareStatement
+                ("UPDATE moneyoperation SET categoryid = ?, sum = ?::float, date = ?::date WHERE id = ?")) {
 
+            statement.setLong(1, moneyOperation.getCategoryId());
+            statement.setFloat(2, moneyOperation.getSum());
+            statement.setString(3, moneyOperation.getDate());
+            statement.setLong(4, moneyOperation.getId());
+
+            statement.execute();
+
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(MoneyOperation moneyOperation) {
+        try (PreparedStatement statement = dataSource
+                .getConnection().prepareStatement("DELETE FROM moneyoperation WHERE id = ? AND authorid = ?")) {
 
+            statement.setLong(1, moneyOperation.getId());
+            statement.setLong(2, moneyOperation.getAuthorId());
+
+            return statement.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

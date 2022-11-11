@@ -7,15 +7,9 @@ import java.util.Optional;
 
 public interface UserRepository {
 
-    List<User> findAll();
-
     boolean save(User user);
 
-    Optional<User> findById(Long id);
-
-    void update(User user);
-
-    void delete(Long id);
+    User findById(Long id);
 
     boolean findByEmail(User user);
 

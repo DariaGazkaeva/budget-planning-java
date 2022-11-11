@@ -6,12 +6,14 @@ import java.util.List;
 
 public interface CashSavingRepository {
 
-    boolean save(CashSavingRepository cashSaving);
+    CashSaving findById(Long id);
+
+    boolean save(CashSaving cashSaving);
 
     List<CashSaving> findAllByAuthorId(Long id);
 
-    void update(Long id);
+    boolean update(CashSaving cashSaving);
 
-    void delete(Long id);
+    boolean delete(CashSaving cashSaving);
 
 }
