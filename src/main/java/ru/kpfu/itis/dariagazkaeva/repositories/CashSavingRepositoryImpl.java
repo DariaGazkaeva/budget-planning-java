@@ -35,7 +35,6 @@ public class CashSavingRepositoryImpl implements CashSavingRepository {
         } catch (SQLException e) {
             throw new DbException(e);
         }
-
         return cashSaving;
     }
 
@@ -58,7 +57,7 @@ public class CashSavingRepositoryImpl implements CashSavingRepository {
             return false;
 
         } catch (SQLException e) {
-            return false;
+            throw new DbException(e);
         }
     }
 
@@ -81,9 +80,8 @@ public class CashSavingRepositoryImpl implements CashSavingRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
-
         return cashSavings;
     }
 
@@ -100,7 +98,7 @@ public class CashSavingRepositoryImpl implements CashSavingRepository {
             statement.execute();
 
         } catch (SQLException e) {
-            return false;
+            throw new DbException(e);
         }
         return true;
     }
@@ -116,7 +114,7 @@ public class CashSavingRepositoryImpl implements CashSavingRepository {
             return statement.executeUpdate() == 1;
 
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
     }
 }

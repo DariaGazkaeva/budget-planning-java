@@ -43,9 +43,7 @@ public class UserRepositoryImpl implements UserRepository {
             }
 
         } catch (SQLException e) {
-            //TODO проверить, что это исключение о нарушении уникальности, а не что-то другое, иначе выбросить исключение
-
-            return false;
+            throw new DbException(e);
         }
 
     }
@@ -69,7 +67,7 @@ public class UserRepositoryImpl implements UserRepository {
             }
 
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
     }
 

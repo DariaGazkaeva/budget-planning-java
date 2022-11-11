@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dariagazkaeva.repositories;
 
+import ru.kpfu.itis.dariagazkaeva.exceptions.DbException;
 import ru.kpfu.itis.dariagazkaeva.models.Category;
 import ru.kpfu.itis.dariagazkaeva.models.MoneyOperation;
 import ru.kpfu.itis.dariagazkaeva.models.User;
@@ -43,7 +44,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             return categories;
 
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
     }
 
@@ -66,7 +67,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             }
 
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
     }
 
@@ -88,7 +89,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             }
 
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
     }
 
@@ -103,7 +104,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             return statement.executeUpdate() == 1;
 
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
     }
 }

@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dariagazkaeva.repositories;
 
+import ru.kpfu.itis.dariagazkaeva.exceptions.DbException;
 import ru.kpfu.itis.dariagazkaeva.models.MoneyOperation;
 
 import javax.sql.DataSource;
@@ -39,7 +40,7 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
 
         return moneyOperation;
@@ -65,7 +66,7 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
             }
             return false;
         } catch (SQLException e) {
-            return false;
+            throw new DbException(e);
         }
     }
 
@@ -97,7 +98,7 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
             return moneyOperations;
 
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
     }
 
@@ -120,7 +121,7 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
             return 0f;
 
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
     }
 
@@ -137,7 +138,7 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
             statement.execute();
 
         } catch (SQLException e) {
-            return false;
+            throw new DbException(e);
         }
         return true;
     }
@@ -153,7 +154,7 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
             return statement.executeUpdate() == 1;
 
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new DbException(e);
         }
     }
 }
