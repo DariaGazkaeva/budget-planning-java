@@ -33,6 +33,7 @@ public class MoneyOperation {
         this.income = income;
         this.description = description;
     }
+    
 
     public String getDescription() {
         return description;

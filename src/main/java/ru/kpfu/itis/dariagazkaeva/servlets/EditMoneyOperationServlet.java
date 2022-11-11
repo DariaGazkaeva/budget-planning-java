@@ -79,28 +79,13 @@ public class EditMoneyOperationServlet extends HttpServlet {
         req.setAttribute("categoryId", categoryId);
         req.setAttribute("description", description);
 
-        List<String> errors = validateMoneyOperationFields(date);
+        MoneyOperation moneyOperation = new MoneyOperation(id, userId, sum, date, categoryId, income, description);
 
-        if (errors.isEmpty()) {
-            MoneyOperation moneyOperation = new MoneyOperation(id, userId, sum, date, categoryId, income, description);
-
-            if (moneyOperationRepository.update(moneyOperation)) {
-                resp.sendRedirect(getServletContext().getContextPath() + "/profile");
-                return;
-            }
-            errors.add("Что-то не так");
-
+        if (moneyOperationRepository.update(moneyOperation)) {
+            resp.sendRedirect(getServletContext().getContextPath() + "/profile");
+            return;
         }
-        req.setAttribute("errors", errors);
+
         getServletContext().getRequestDispatcher("/WEB-INF/views/editMoneyOperation.jsp").forward(req, resp);
-    }
-
-    private List<String> validateMoneyOperationFields(String date) {
-
-        List<String> errors = new ArrayList<>();
-        if (!date.matches("\\d\\d-\\d\\d-\\d\\d\\d\\d")) {
-            errors.add("Дата должна быть введена в формате дд-мм-гггг");
-        }
-        return errors;
     }
 }
