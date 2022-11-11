@@ -34,21 +34,22 @@ public class EntryServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
+        req.setAttribute("email", email);
+
         List<String> errors = validateEntryFields(email, password);
 
         if (errors.isEmpty()) {
             User user = new User(email, password);
             if (userRepository.findByEmail(user)) {
+                req.getSession().setAttribute("id", user.getId());
 
-                req.getSession().setAttribute("user", user);
-
-                resp.sendRedirect(getServletContext().getContextPath());
+                resp.sendRedirect(getServletContext().getContextPath() + "/profile");
                 return;
             }
             errors.add("Неверно заполнено поле EMAIL или ПАРОЛЬ");
-
         }
         req.setAttribute("errors", errors);
+
         getServletContext().getRequestDispatcher("/WEB-INF/views/entry.jsp").forward(req, resp);
     }
 
@@ -62,7 +63,6 @@ public class EntryServlet extends HttpServlet {
         if (password == null || password.isEmpty()) {
             errors.add("Поле ПАРОЛЬ должно быть заполнено");
         }
-
         return errors;
     }
 }

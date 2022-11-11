@@ -2,6 +2,7 @@ package ru.kpfu.itis.dariagazkaeva.servlets;
 
 import ru.kpfu.itis.dariagazkaeva.models.Category;
 import ru.kpfu.itis.dariagazkaeva.models.MoneyOperation;
+import ru.kpfu.itis.dariagazkaeva.models.User;
 import ru.kpfu.itis.dariagazkaeva.repositories.CashSavingRepository;
 import ru.kpfu.itis.dariagazkaeva.repositories.CategoryRepository;
 import ru.kpfu.itis.dariagazkaeva.repositories.MoneyOperationRepository;
@@ -59,6 +60,37 @@ public class HistoryServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        Long authorId = (Long) req.getSession().getAttribute("id");
+        Boolean income = req.getParameter("type").equals("income");
+        String startDay = req.getParameter("start");
+        String endDay = req.getParameter("end");
+
+        List<String> errors = validateDate(startDay, endDay);
+
+        List<MoneyOperation> moneyOperations = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
+
+        if (errors.isEmpty()) {
+            moneyOperations = moneyOperationRepository.findAllByAuthorId(authorId, startDay, endDay, income);
+        } else {
+            req.setAttribute("errors", errors);
+        }
+
+        for (MoneyOperation operation : moneyOperations) {
+            categories.add(categoryRepository.findById(operation.getCategoryId()));
+        }
+
+        req.setAttribute("categories", categories);
+        req.setAttribute("moneyOperations", moneyOperations);
+        getServletContext().getRequestDispatcher("/WEB-INF/views/history.jsp").forward(req, resp);
+    }
+
+    private List<String> validateDate(String startDay, String endDay) {
+        List<String> errors = new ArrayList<>();
+        String pattern = "\\d\\d-\\d\\d-\\d\\d\\d\\d";
+        if (startDay.matches(pattern) && endDay.matches(pattern)) {
+            errors.add("Дата должна быть в формате дд-мм-гггг");
+        }
+        return errors;
     }
 }

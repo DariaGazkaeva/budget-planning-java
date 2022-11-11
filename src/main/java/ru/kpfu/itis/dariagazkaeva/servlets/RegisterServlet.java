@@ -16,8 +16,6 @@ import java.util.List;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
-    // TODO проверка на второй ввод пароля и другие проверки
-
     private UserRepository userRepository;
 
     @Override
@@ -35,12 +33,13 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+        String passwordRepeat = req.getParameter("password_repeat");
         String name = req.getParameter("name");
 
         req.setAttribute("name", name);
         req.setAttribute("email", email);
 
-        List<String> errors = validateRegisterFields(email, password, name);
+        List<String> errors = validateRegisterFields(email, password, passwordRepeat, name);
 
         if (errors.isEmpty()) {
             User user = new User(email, password, name);
@@ -52,13 +51,21 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
             errors.add("Пользователь с таким EMAIL уже существует");
-
         }
         req.setAttribute("errors", errors);
         getServletContext().getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req, resp);
     }
 
-    private List<String> validateRegisterFields(String email, String password, String name) {
+    private boolean validatePasswordRepeat(String password, String passwordRepeat) {
+        return password.equals(passwordRepeat);
+    }
+
+    private boolean validatePasswordSymbols(String password) {
+        return password.length() >= 8 && !password.matches("\\d+");
+
+    }
+
+    private List<String> validateRegisterFields(String email, String password, String passwordRepeat, String name) {
 
         List<String> errors = new ArrayList<>();
 
@@ -71,7 +78,15 @@ public class RegisterServlet extends HttpServlet {
         if (password == null || password.isEmpty()) {
             errors.add("Поле ПАРОЛЬ должно быть заполнено");
         }
-
+        if (passwordRepeat == null || passwordRepeat.isEmpty()) {
+            errors.add("Поле ПАРОЛЬ должно быть заполнено");
+        }
+        if (!validatePasswordRepeat(password, passwordRepeat)) {
+            errors.add("Поле ПАРОЛЬ заполнено неверно");
+        }
+        if (!validatePasswordSymbols(password)) {
+            errors.add("ПАРОЛЬ не должен быть менее 8 символов и состоять только из цифр");
+        }
         return errors;
     }
 }

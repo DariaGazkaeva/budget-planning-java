@@ -35,15 +35,29 @@ public class EditCashSavingServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String name = req.getParameter("name");
-        Float sum = Float.valueOf(req.getParameter("sum"));
-        // TODO здесь может быть NumberFormatException
-        Long id = Long.valueOf(req.getParameter("id"));
+        Float sum;
+        Long id;
+        try {
+            sum = Float.valueOf(req.getParameter("sum"));
+        } catch (NumberFormatException e) {
+            resp.setStatus(400);
+            resp.getWriter().println("Неправильное значение суммы");
+            return;
+        }
+        try {
+            id = Long.valueOf(req.getParameter("id"));
+        } catch (NumberFormatException e) {
+            resp.setStatus(400);
+            resp.getWriter().println("Неправильный id");
+            return;
+        }
 
         req.setAttribute("name", name);
         req.setAttribute("sum", sum);
 
-        List<String> errors = new ArrayList<>();
+        List<String> errors = validateCashSavingFields(name);
 
         if (errors.isEmpty()) {
             CashSaving cashSaving = new CashSaving(id, name, sum);
@@ -56,5 +70,13 @@ public class EditCashSavingServlet extends HttpServlet {
         }
         req.setAttribute("errors", errors);
         getServletContext().getRequestDispatcher("/WEB-INF/views/editCashSaving.jsp").forward(req, resp);
+    }
+
+    private List<String> validateCashSavingFields(String name) {
+        List<String> errors = new ArrayList<>();
+        if (name.length() > 100) {
+            errors.add("Длина названия не может превышать 100");
+        }
+        return errors;
     }
 }
