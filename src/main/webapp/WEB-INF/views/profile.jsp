@@ -1,21 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <html lang="ru">
-<head>
-    <title>Профиль</title>
-    <meta charset="UTF-8">
+<t:head title="Профиль">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/profile.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/optionSelection.css">
-</head>
-<body>
-    <div class="container">
+</t:head>
 
-        <div class="header">
-            <img class="logo" src="${pageContext.request.contextPath}/img/logo.png" alt="Логотип">
-            <h1>Дневник расходов и доходов</h1>
-        </div>
+<t:body>
+    <div class="container">
+        <jsp:include page="parts/_header.jsp" />
+
+        <h1>Дневник расходов и доходов</h1>
 
         <div class="sidebar">
             <p class="greetings">Добрый день, ${name}!</p>
@@ -26,16 +24,15 @@
                     <br>
                     <c:forEach items="${cashSavings}" var="cash">
                         <div class="cash-saving">
-                            <h3>${cash.getName()}</h3>
+                            <h3>${cash.name}</h3>
                             <p>
-                                <fmt:formatNumber value="${cash.getSum()}" pattern="#,##0.00" />
+                                <fmt:formatNumber value="${cash.sum}" pattern="#,##0.00" />
                             </p>
-                            <a href="${pageContext.request.contextPath}/edit-cash-saving?id=${cash.getId()}">Редактировать</a>
+                            <a href="${pageContext.request.contextPath}/edit-cash-saving?id=${cash.id}">Редактировать</a>
                         </div>
                     </c:forEach>
                 </div>
             </c:if>
-<%--TODO конвертер валют--%>
         </div>
 
         <div class="main">
@@ -54,5 +51,7 @@
         </div>
 
     </div>
-</body>
+
+    <jsp:include page="parts/_footer.jsp" />
+</t:body>
 </html>

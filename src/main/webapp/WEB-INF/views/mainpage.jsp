@@ -1,17 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <html lang="ru">
-<head>
-    <title>Дневник расходов и доходов</title>
-    <meta charset="UTF-8">
+<t:head title="Дневник расходов и доходов">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/optionSelection.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
-</head>
+</t:head>
 
-<body>
+<t:body>
     <div class="option-selection">
         <a href="${pageContext.request.contextPath}/register">Зарегистрироваться</a>
         <a href="${pageContext.request.contextPath}/entry">Войти</a>
     </div>
-</body>
+</t:body>
 
 </html>

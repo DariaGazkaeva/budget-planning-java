@@ -23,16 +23,16 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public List<Category> findByType(Boolean income) {
-
+    public List<Category> findAllByTypeAndAuthorId(Boolean income, Long authorId) {
         List<Category> categories = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement1 = connection.prepareStatement("SELECT * FROM category WHERE income = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM category WHERE income = ? AND (authorId = ? OR authorid IS NULL )")) {
 
-            statement1.setBoolean(1, income);
+            statement.setBoolean(1, income);
+            statement.setLong(2, authorId);
 
-            try (ResultSet result = statement1.executeQuery()) {
+            try (ResultSet result = statement.executeQuery()) {
                 while (result.next()) {
                     categories.add(new Category(result.getLong("id"),
                             result.getString("name"),
@@ -40,7 +40,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                             result.getBoolean("income")));
                 }
             }
-
             return categories;
 
         } catch (SQLException e) {

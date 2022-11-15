@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dariagazkaeva.servlets;
 
+import ru.kpfu.itis.dariagazkaeva.exceptions.DbException;
 import ru.kpfu.itis.dariagazkaeva.models.User;
 import ru.kpfu.itis.dariagazkaeva.repositories.UserRepository;
 
@@ -43,14 +44,19 @@ public class RegisterServlet extends HttpServlet {
 
         if (errors.isEmpty()) {
             User user = new User(email, password, name);
-            if (userRepository.save(user)) {
 
-                req.getSession().setAttribute("id", user.getId());
+            try {
+                if (userRepository.save(user)) {
 
-                resp.sendRedirect(getServletContext().getContextPath() + "/profile");
-                return;
+                    req.getSession().setAttribute("id", user.getId());
+
+                    resp.sendRedirect(getServletContext().getContextPath() + "/profile");
+                    return;
+                }
+                errors.add("Пользователь с таким EMAIL уже существует");
+            } catch (DbException e) {
+                errors.add("Проблема с базой данных");
             }
-            errors.add("Пользователь с таким EMAIL уже существует");
         }
         req.setAttribute("errors", errors);
         getServletContext().getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req, resp);

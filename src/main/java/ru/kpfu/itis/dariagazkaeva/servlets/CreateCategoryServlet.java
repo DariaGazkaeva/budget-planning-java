@@ -1,7 +1,7 @@
 package ru.kpfu.itis.dariagazkaeva.servlets;
 
+import ru.kpfu.itis.dariagazkaeva.exceptions.DbException;
 import ru.kpfu.itis.dariagazkaeva.models.Category;
-import ru.kpfu.itis.dariagazkaeva.models.User;
 import ru.kpfu.itis.dariagazkaeva.repositories.CategoryRepository;
 
 import javax.servlet.ServletContext;
@@ -32,6 +32,8 @@ public class CreateCategoryServlet extends HttpServlet {
 
         if (name == null || name.isEmpty() || incomeString == null) {
             resp.setStatus(400);
+            req.setAttribute("statusCode", 400);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
             return;
         }
 
@@ -40,16 +42,25 @@ public class CreateCategoryServlet extends HttpServlet {
             income = Boolean.parseBoolean(incomeString);
         } catch (Exception e) {
             resp.setStatus(400);
+            req.setAttribute("statusCode", 400);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
             return;
         }
 
         Long userId = (Long) req.getSession().getAttribute("id");
         Category category = new Category(userId, name, income);
-        if (!categoryRepository.save(category)) {
+        try {
+            if (!categoryRepository.save(category)) {
+                resp.setStatus(400);
+                req.setAttribute("statusCode", 400);
+                getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
+                return;
+            }
+            resp.getWriter().println("{\"id\":" + category.getId() + "}");
+        } catch (DbException e) {
             resp.setStatus(400);
-            return;
+            req.setAttribute("statusCode", 400);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
-        resp.getWriter().println("{\"id\":" + category.getId() + "}");
-
     }
 }

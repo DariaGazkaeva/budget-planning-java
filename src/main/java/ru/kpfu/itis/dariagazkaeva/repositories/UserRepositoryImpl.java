@@ -23,12 +23,19 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean save(User user) {
 
+        try {
+            if (findByEmail(user.getEmail())) {
+                return false;
+            }
+        } catch (DbException e) {
+            throw new DbException(e);
+        }
+
         user.setPassword(new HashingPassword().hash(user.getPassword()));
 
         try (PreparedStatement statement = dataSource.getConnection()
-                .prepareStatement("INSERT INTO public.user(email, password, name) VALUES (?, ?, ?) RETURNING id")
-        )
-        {
+                .prepareStatement("INSERT INTO public.user(email, password, name) VALUES (?, ?, ?) RETURNING id")) {
+
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getName());
@@ -41,11 +48,9 @@ public class UserRepositoryImpl implements UserRepository {
                 }
                 return false;
             }
-
         } catch (SQLException e) {
             throw new DbException(e);
         }
-
     }
 
     @Override
@@ -71,7 +76,8 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    public boolean findByEmail(User user) {
+    @Override
+    public boolean findByEmailAndPassword(User user) {
 
         user.setPassword(new HashingPassword().hash(user.getPassword()));
 
@@ -87,6 +93,27 @@ public class UserRepositoryImpl implements UserRepository {
             if (result.next()) {
                 user.setId(result.getLong("id"));
                 user.setName(result.getString("name"));
+                return true;
+            }
+            return false;
+
+        } catch (SQLException e) {
+            throw new DbException(e);
+        }
+    }
+
+    @Override
+    public boolean findByEmail(String email) {
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection
+                     .prepareStatement("SELECT * FROM public.user WHERE email = ?")) {
+
+            statement.setString(1, email);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
                 return true;
             }
             return false;

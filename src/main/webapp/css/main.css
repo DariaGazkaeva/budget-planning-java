@@ -54,6 +54,45 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.container {
+    max-width: 90%;
+    margin: 0 auto;
+}
+
 .display-none {
     display: none;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav__ul {
+    display: flex;
+}
+
+.nav__li {
+    margin-right: 20px;
+}
+
+.nav__a {
+    color: #222623;
+}
+
+.logo {
+    width: 10vw;
+    height: 10vw;
+    margin: 2vw;
+}
+
+.nav__logout {
+    color: #222623;
+}
+
+.footer__message {
+    font-size: 15px;
+    margin: 0 auto;
+    width: 60%;
 }

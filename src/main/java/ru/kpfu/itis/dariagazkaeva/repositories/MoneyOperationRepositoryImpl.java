@@ -20,13 +20,14 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
     }
 
     @Override
-    public MoneyOperation findById(Long id) {
+    public MoneyOperation findById(Long id, Long authorId) {
         MoneyOperation moneyOperation = null;
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM moneyoperation WHERE id = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM moneyoperation WHERE id = ? AND authorid = ?")) {
 
             statement.setLong(1, id);
+            statement.setLong(2, authorId);
 
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
@@ -126,14 +127,16 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
     }
 
     @Override
-    public boolean update(MoneyOperation moneyOperation) {
+    public boolean update(MoneyOperation moneyOperation, Long authorId) {
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement
-                ("UPDATE moneyoperation SET categoryid = ?, sum = ?::float, date = ?::date WHERE id = ?")) {
+                ("UPDATE moneyoperation SET categoryid = ?, sum = ?::float, date = ?::date, description = ? WHERE id = ? AND authorId = ?")) {
 
             statement.setLong(1, moneyOperation.getCategoryId());
             statement.setFloat(2, moneyOperation.getSum());
             statement.setString(3, moneyOperation.getDate());
-            statement.setLong(4, moneyOperation.getId());
+            statement.setString(4, moneyOperation.getDescription());
+            statement.setLong(5, moneyOperation.getId());
+            statement.setLong(6, authorId);
 
             statement.execute();
 
@@ -144,12 +147,12 @@ public class MoneyOperationRepositoryImpl implements MoneyOperationRepository {
     }
 
     @Override
-    public boolean delete(MoneyOperation moneyOperation) {
+    public boolean delete(MoneyOperation moneyOperation, Long authorId) {
         try (PreparedStatement statement = dataSource
                 .getConnection().prepareStatement("DELETE FROM moneyoperation WHERE id = ? AND authorid = ?")) {
 
             statement.setLong(1, moneyOperation.getId());
-            statement.setLong(2, moneyOperation.getAuthorId());
+            statement.setLong(2, authorId);
 
             return statement.executeUpdate() == 1;
 

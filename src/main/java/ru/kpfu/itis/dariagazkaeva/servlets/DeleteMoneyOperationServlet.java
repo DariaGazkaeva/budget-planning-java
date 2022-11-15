@@ -1,8 +1,7 @@
 package ru.kpfu.itis.dariagazkaeva.servlets;
 
-import ru.kpfu.itis.dariagazkaeva.models.Category;
+import ru.kpfu.itis.dariagazkaeva.exceptions.DbException;
 import ru.kpfu.itis.dariagazkaeva.models.MoneyOperation;
-import ru.kpfu.itis.dariagazkaeva.repositories.CategoryRepository;
 import ru.kpfu.itis.dariagazkaeva.repositories.MoneyOperationRepository;
 
 import javax.servlet.ServletException;
@@ -24,24 +23,47 @@ public class DeleteMoneyOperationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         Long moneyOperationId;
+        Long userId = (Long) req.getSession().getAttribute("id");
+
         try {
             moneyOperationId = Long.parseLong(req.getParameter("id"));
         } catch (Exception e) {
             resp.setStatus(400);
-            resp.getWriter().println("Неправильный id");
+            req.setAttribute("statusCode", 400);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
             return;
         }
 
-        MoneyOperation moneyOperation = moneyOperationRepository.findById(moneyOperationId);
-
-        if (!moneyOperationRepository.delete(moneyOperation)) {
-            resp.setStatus(403);
-            resp.getWriter().println("Не ваша операция");
+        MoneyOperation moneyOperation;
+        try {
+            moneyOperation = moneyOperationRepository.findById(moneyOperationId, userId);
+        } catch (DbException e) {
+            resp.setStatus(500);
+            req.setAttribute("statusCode", 500);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
             return;
         }
 
-        resp.sendRedirect(getServletContext().getContextPath() + "/profile");
+        String type = moneyOperation.getIncome().equals(true) ? "income" : "outcome";
+
+        try {
+            if (!moneyOperationRepository.delete(moneyOperation, userId)) {
+                resp.setStatus(403);
+                req.setAttribute("statusCode", 403);
+                getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
+                return;
+            }
+        } catch (DbException e) {
+            resp.setStatus(500);
+            req.setAttribute("statusCode", 500);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
+            return;
+        }
+
+
+        resp.sendRedirect(getServletContext().getContextPath() + "/history?type=" + type);
 
     }
 }

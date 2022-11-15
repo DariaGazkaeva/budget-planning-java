@@ -16,13 +16,15 @@ public class CashSavingRepositoryImpl implements CashSavingRepository {
     }
 
     @Override
-    public CashSaving findById(Long id) {
+    public CashSaving findById(Long id, Long authorId) {
+
         CashSaving cashSaving = null;
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM cashsaving WHERE id = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM cashsaving WHERE id = ? AND authorId = ?")) {
 
             statement.setLong(1, id);
+            statement.setLong(2, authorId);
 
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
@@ -86,30 +88,30 @@ public class CashSavingRepositoryImpl implements CashSavingRepository {
     }
 
     @Override
-    public boolean update(CashSaving cashSaving) {
+    public boolean update(CashSaving cashSaving, Long authorId) {
 
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement
-                ("UPDATE cashsaving SET name = ?, sum = ?::float WHERE id = ?")) {
+                ("UPDATE cashsaving SET name = ?, sum = ?::float WHERE id = ? AND authorId = ?")) {
 
             statement.setString(1, cashSaving.getName());
             statement.setFloat(2, cashSaving.getSum());
             statement.setLong(3, cashSaving.getId());
+            statement.setLong(4, authorId);
 
-            statement.execute();
+            return statement.executeUpdate() == 1;
 
         } catch (SQLException e) {
             throw new DbException(e);
         }
-        return true;
     }
 
     @Override
-    public boolean delete(CashSaving cashSaving) {
+    public boolean delete(CashSaving cashSaving, Long authorId) {
         try (PreparedStatement statement = dataSource
                 .getConnection().prepareStatement("DELETE FROM cashsaving WHERE id = ? AND authorid = ?")) {
 
             statement.setLong(1, cashSaving.getId());
-            statement.setLong(2, cashSaving.getAuthorId());
+            statement.setLong(2, authorId);
 
             return statement.executeUpdate() == 1;
 

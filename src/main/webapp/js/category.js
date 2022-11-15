@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let option = `<option value="${data.id}">${name}</option>`;
                 categorySelect.insertAdjacentHTML('beforeend', option);
 
-                let li = `<li><a class="delete-category-widget" href="/another/delete-category/${data.id}">${name}</a></li>`;
+                let li = `<li><a class="delete-category-widget__a" href="/diary/delete-category?id=${data.id}">${name}</a></li>`;
                 deleteCategoryWidget.querySelector("ul").insertAdjacentHTML('beforeend', li);
             });
     })

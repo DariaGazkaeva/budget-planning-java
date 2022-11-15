@@ -11,6 +11,8 @@ public interface UserRepository {
 
     User findById(Long id);
 
-    boolean findByEmail(User user);
+    boolean findByEmailAndPassword(User user);
+
+    boolean findByEmail(String email);
 
 }

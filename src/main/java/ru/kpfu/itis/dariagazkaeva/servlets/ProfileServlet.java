@@ -40,10 +40,22 @@ public class ProfileServlet extends HttpServlet {
             Long id = (Long) req.getSession().getAttribute("id");
             GettingDay gettingDay = new GettingDay();
 
-            User user = userRepository.findById(id);
-            List<CashSaving> cashSavings = cashSavingRepository.findAllByAuthorId(id);
-            Float incomeSumMonth = moneyOperationRepository.getSum(id, gettingDay.getDayOfCurrrentMonth(true), gettingDay.getDayOfCurrrentMonth(false), true);
-            Float outcomeSumMonth = moneyOperationRepository.getSum(id, gettingDay.getDayOfCurrrentMonth(true), gettingDay.getDayOfCurrrentMonth(false), false);
+            User user;
+            List<CashSaving> cashSavings;
+            Float incomeSumMonth;
+            Float outcomeSumMonth;
+
+            try {
+                user = userRepository.findById(id);
+                cashSavings = cashSavingRepository.findAllByAuthorId(id);
+                incomeSumMonth = moneyOperationRepository.getSum(id, gettingDay.getDayOfCurrrentMonth(true), gettingDay.getDayOfCurrrentMonth(false), true);
+                outcomeSumMonth = moneyOperationRepository.getSum(id, gettingDay.getDayOfCurrrentMonth(true), gettingDay.getDayOfCurrrentMonth(false), false);
+            } catch (DbException e) {
+                resp.setStatus(500);
+                req.setAttribute("statusCode", 500);
+                getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
+                return;
+            }
 
             req.setAttribute("name", user.getName());
             req.setAttribute("cashSavings", cashSavings);

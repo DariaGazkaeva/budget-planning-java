@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dariagazkaeva.servlets;
 
+import ru.kpfu.itis.dariagazkaeva.exceptions.DbException;
 import ru.kpfu.itis.dariagazkaeva.models.User;
 import ru.kpfu.itis.dariagazkaeva.repositories.UserRepository;
 
@@ -40,13 +41,18 @@ public class EntryServlet extends HttpServlet {
 
         if (errors.isEmpty()) {
             User user = new User(email, password);
-            if (userRepository.findByEmail(user)) {
-                req.getSession().setAttribute("id", user.getId());
 
-                resp.sendRedirect(getServletContext().getContextPath() + "/profile");
-                return;
+            try {
+                if (userRepository.findByEmailAndPassword(user)) {
+                    req.getSession().setAttribute("id", user.getId());
+
+                    resp.sendRedirect(getServletContext().getContextPath() + "/profile");
+                    return;
+                }
+                errors.add("Неверно заполнено поле EMAIL или ПАРОЛЬ");
+            } catch (DbException e) {
+                errors.add("Проблема с базой данных");
             }
-            errors.add("Неверно заполнено поле EMAIL или ПАРОЛЬ");
         }
         req.setAttribute("errors", errors);
 

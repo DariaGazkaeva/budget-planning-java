@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dariagazkaeva.servlets;
 
+import ru.kpfu.itis.dariagazkaeva.exceptions.DbException;
 import ru.kpfu.itis.dariagazkaeva.models.CashSaving;
 import ru.kpfu.itis.dariagazkaeva.repositories.CashSavingRepository;
 
@@ -39,7 +40,8 @@ public class CreateCashSavingServlet extends HttpServlet {
             sum = Float.valueOf(req.getParameter("sum"));
         } catch (NumberFormatException e) {
             resp.setStatus(400);
-            resp.getWriter().println("Неправильное значение суммы");
+            req.setAttribute("statusCode", 400);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
             return;
         }
 
@@ -51,11 +53,15 @@ public class CreateCashSavingServlet extends HttpServlet {
         if (errors.isEmpty()) {
             CashSaving cashSaving = new CashSaving(name, userId, sum);
 
-            if (cashSavingRepository.save(cashSaving)) {
-                resp.sendRedirect(getServletContext().getContextPath() + "/profile");
-                return;
+            try {
+                if (cashSavingRepository.save(cashSaving)) {
+                    resp.sendRedirect(getServletContext().getContextPath() + "/profile");
+                    return;
+                }
+                errors.add("Что-то не так с базой данных");
+            } catch (DbException e) {
+                errors.add("Что-то не так с базой данных");
             }
-            errors.add("Что-то не так");
         }
         req.setAttribute("errors", errors);
         getServletContext().getRequestDispatcher("/WEB-INF/views/editCashSaving.jsp").forward(req, resp);

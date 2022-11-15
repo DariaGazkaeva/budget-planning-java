@@ -1,10 +1,11 @@
 package ru.kpfu.itis.dariagazkaeva.servlets;
 
-import ru.kpfu.itis.dariagazkaeva.models.CashSaving;
+import ru.kpfu.itis.dariagazkaeva.exceptions.DbException;
 import ru.kpfu.itis.dariagazkaeva.models.Category;
 import ru.kpfu.itis.dariagazkaeva.models.MoneyOperation;
 import ru.kpfu.itis.dariagazkaeva.repositories.CategoryRepository;
 import ru.kpfu.itis.dariagazkaeva.repositories.MoneyOperationRepository;
+import ru.kpfu.itis.dariagazkaeva.utils.DateValidator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -31,29 +32,67 @@ public class CreateMoneyOperationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Boolean income = req.getParameter("type").equals("income");
-        List<Category> categories = categoryRepository.findByType(income);
+        Long userId = (Long) req.getSession().getAttribute("id");
+        Boolean income;
+        try {
+            if (req.getParameter("type").equals("income")) {
+                income = true;
+            } else if (req.getParameter("type").equals("outcome")) {
+                income = false;
+            } else {
+                throw new IllegalArgumentException();
+            }
+
+        } catch (Exception e) {
+            resp.setStatus(400);
+            req.setAttribute("statusCode", 400);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
+            return;
+        }
+        List<Category> categories;
+        try {
+            categories = categoryRepository.findAllByTypeAndAuthorId(income, userId);
+        } catch (DbException e) {
+            resp.setStatus(400);
+            req.setAttribute("statusCode", 400);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
+            return;
+        }
+
         req.setAttribute("categories", categories);
+        req.setAttribute("userId", userId);
         getServletContext().getRequestDispatcher("/WEB-INF/views/editMoneyOperation.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        Long categoryId = null;
+        Float sum = null;
         Long userId = (Long) req.getSession().getAttribute("id");
         String date = req.getParameter("date");
-        Boolean income = req.getParameter("type").equals("income");
         String description = req.getParameter("description");
-        Long categoryId;
-        Float sum;
+        Boolean income = null;
+
+        List<String> errors = new ArrayList<>();
+        if (date == null || !new DateValidator().validateDate(date)) {
+            errors.add("Поле дата обязательно для заполнения");
+        }
+
         try {
             categoryId = Long.valueOf(req.getParameter("category"));
             sum = Float.valueOf(req.getParameter("sum"));
+            income = req.getParameter("type").equals("income");
         } catch (NumberFormatException e) {
-            resp.setStatus(400);
-            resp.getWriter().println("Неправильное значение суммы");
+            errors.add("Неправильное значение переданных параметров");
+        }
+
+        if (!errors.isEmpty()) {
+            req.setAttribute("errors", errors);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/editMoneyOperation.jsp").forward(req, resp);
             return;
         }
+
 
         req.setAttribute("sum", sum);
         req.setAttribute("date", date);
@@ -61,10 +100,18 @@ public class CreateMoneyOperationServlet extends HttpServlet {
 
         MoneyOperation moneyOperation = new MoneyOperation(userId, sum, date, categoryId, income, description);
 
-        if (moneyOperationRepository.save(moneyOperation)) {
-            resp.sendRedirect(getServletContext().getContextPath() + "/profile");
+        try {
+            if (moneyOperationRepository.save(moneyOperation)) {
+                resp.sendRedirect(getServletContext().getContextPath() + "/profile");
+                return;
+            }
+            getServletContext().getRequestDispatcher("/WEB-INF/views/editMoneyOperation.jsp").forward(req, resp);
+        } catch (DbException e) {
+            resp.setStatus(500);
+            req.setAttribute("statusCode", 500);
+            getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
             return;
         }
-        getServletContext().getRequestDispatcher("/WEB-INF/views/editMoneyOperation.jsp").forward(req, resp);
+
     }
 }

@@ -1,15 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <html lang="ru">
-<head>
-    <title>Регистрация</title>
-    <meta charset="UTF-8">
+<t:head title="Профиль">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/userForm.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/submitButton.css">
-</head>
+</t:head>
 
-<body>
+<t:body>
+
     <div class="user-form">
 
         <h1>Регистрация</h1>
@@ -42,5 +42,5 @@
         </div>
     </c:if>
 
-</body>
+</t:body>
 </html>
