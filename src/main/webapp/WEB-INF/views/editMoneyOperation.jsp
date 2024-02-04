@@ -10,8 +10,10 @@
 </t:head>
 <t:body>
     <jsp:include page="parts/_header.jsp" />
-    <button class="create-category-widget__button">Создать новую категорию</button>
-    <button class="delete-category-widget__button">Удалить категорию</button>
+    <div class="buttons-in-center">
+        <button class="create-category-widget__button  user-form__a">Создать новую категорию</button>
+        <button class="delete-category-widget__button  user-form__a">Удалить категорию</button>
+    </div>
 
     <div class="user-form create-category-widget display-none">
         <p>Создать категорию:</p>

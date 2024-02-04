@@ -50,3 +50,11 @@ a:hover {
     background-color: #bdbdbd;
     transition: .2s;
 }
+
+.buttons-in-center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 360px;
+    align-items: center;
+    display: flex;
+}
