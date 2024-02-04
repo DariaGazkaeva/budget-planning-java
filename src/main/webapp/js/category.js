@@ -40,7 +40,4 @@ document.addEventListener('DOMContentLoaded', () => {
                 deleteCategoryWidget.querySelector("ul").insertAdjacentHTML('beforeend', li);
             });
     })
-
-
-
 })

@@ -91,8 +91,8 @@ header {
     color: #222623;
 }
 
-.footer__message {
+.footer {
     font-size: 15px;
-    margin: 0 auto;
-    width: 60%;
+    font-weight: bold;
+    text-align: center;
 }

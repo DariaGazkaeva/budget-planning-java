@@ -26,8 +26,6 @@
         <a class="user-form__a" href="${pageContext.request.contextPath}/profile">В профиль</a>
     </div>
 
-
-
     <c:if test="${not empty errors}">
         <div class="user-form">
             <c:forEach var="error" items="${errors}">

@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
 
@@ -18,7 +17,6 @@ public class UserRepositoryImpl implements UserRepository {
     public UserRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
 
     @Override
     public boolean save(User user) {
@@ -113,10 +111,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             ResultSet result = statement.executeQuery();
 
-            if (result.next()) {
-                return true;
-            }
-            return false;
+            return result.next();
 
         } catch (SQLException e) {
             throw new DbException(e);
